@@ -1,0 +1,236 @@
+set serveroutput on
+accept strings prompt 'Input the ingredients  (comma separated and press enter to exit):';
+
+create table temp1(ingredient_name varchar(20));
+
+declare
+s varchar2(1000):='&strings';
+ begin
+ for r in (select regexp_substr(s,'[^,]+',1,level) str
+from dual 
+connect by level <= length(s)-length(replace(s,',',''))+1) loop
+insert into temp1 values(r.str);
+end loop;
+end;
+/
+----------------------------------------------------------------------------------------------
+
+create table temp2(id int);
+set serveroutput on
+DECLARE 
+    id int;
+   CURSOR c is 
+      SELECT ingredients.ingredient_id from ingredients,temp1 where ingredients.ingredient_name=temp1.ingredient_name; 
+BEGIN 
+   OPEN c; 
+   LOOP 
+   FETCH c into id; 
+      EXIT WHEN c%notfound; 
+       insert into temp2 values(id);
+   END LOOP; 
+   CLOSE c; 
+END; 
+/
+//id milgaya bhai
+
+----------------------------------------------------------------------------------------------
+			
+
+FOR a in 1..dishcount LOOP
+create table temp3(id int);
+
+DECLARE 
+  a number(2);
+dishcount int; 
+
+BEGIN 
+	select count(dish_id) into dishcount from dish; 
+   	
+	
+      DECLARE
+	id int;
+	CURSOR c1 is
+	select recipe.ingredient_id from recipe where recipe.dish_id=1;
+       BEGIN
+	OPEN c1;
+	LOOP
+	FETCH c1 into id;
+ 	EXIT WHEN c1%notfound; 
+	insert into temp3 values(id);
+	END LOOP;
+	CLOSE c1;
+	END;
+END; 
+/
+
+
+DECLARE 
+  a number(2);
+dishcount int; 
+
+BEGIN 
+	select count(dish_id) into dishcount from dish; 
+   	FOR a in 1..dishcount LOOP
+	
+      DECLARE
+	id int;
+	CURSOR c1 is
+	select recipe.ingredient_id from recipe where recipe.dish_id=a;
+       BEGIN
+	OPEN c1;
+	LOOP
+	FETCH c1 into id;
+ 	EXIT WHEN c1%notfound; 
+	dbms_output.put_line(id);
+	END LOOP;
+	CLOSE c1;
+	END;
+          END LOOP;
+END; 
+/
+
+3.)
+FINAL CODE::------->
+create table temp3(id int);
+create table temp4(dish_id int);
+DECLARE 
+  a number(2);
+dishcount int; 
+
+BEGIN 
+	select count(dish_id) into dishcount from dish; 
+   	FOR a in 1..dishcount LOOP
+	
+      DECLARE
+	chk int;
+	id int;
+	CURSOR c1 is
+	select recipe.ingredient_id from recipe where recipe.dish_id=a;
+       BEGIN
+	OPEN c1;
+	LOOP
+	FETCH c1 into id;
+ 	EXIT WHEN c1%notfound; 
+	insert into temp3 values(id);
+	END LOOP;
+	select count(*) into chk from (select * from temp3 except select * from temp2);
+	IF(chk=0) THEN
+	insert into temp4 values(a);
+	END IF;
+	CLOSE c1;
+	END;
+	delete  from temp3;
+          END LOOP;
+	
+END; 
+/
+select * from dish where dish.dish_id in(select * from temp4);
+
+-------------------------------------------------------------------------------------------------------------------------------
+set serveroutput on;
+create or replace procedure calc
+is
+
+begin
+for i in (select dish_id from temp4) 
+loop
+declare
+p int;
+id int;
+cursor c is 
+select sum(protein) from nutritional_info where ingredient_id in(select ingredient_id from recipe where recipe.dish_id in i.dish_id);
+begin
+open c;
+loop
+fetch c into p;
+exit when c%notfound;
+insert into protein values(i.dish_id,p);
+end loop;
+close c;
+end;
+
+end loop;
+end;
+/
+drop procedure calc;
+
+
+
+
+
+4. final code-->
+
+begin
+for i in (select dish_id from temp4) 
+loop
+declare
+p int;
+f int;
+cc int;
+cal int;
+id int;
+cursor c is 
+select sum(protein),sum(carbs),sum(fats),sum(calories) from nutritional_info where ingredient_id in(select ingredient_id from recipe where recipe.dish_id in i.dish_id);
+begin
+open c;
+loop
+fetch c into p,cc,f,cal;
+exit when c%notfound;
+insert into protein values(i.dish_id,p);
+insert into carbs values(i.dish_id,cc);
+insert into fats values(i.dish_id,f);
+insert into calories values(i.dish_id,cal);
+end loop;
+close c;
+end;
+end loop;
+end;
+/
+execute calc;
+
+
+delete  from temp1
+delete  from temp2;
+delete  from temp3;
+delete  from temp4;
+delete  from protein;
+delete  from fats;
+delete  from calories;
+delete  from carbs;
+
+
+
+
+
+
+select ingredient_name from ingredients where ingredient_id in (select ingredient_id from recipe where dish_id = 3 or dish_id=8);
+----------------------------------------------------------------------------------------------------
+
+
+create or replace trigger trig
+before insert on temp1
+for each row
+begin 
+delete from  temp1 where ingredient_name=:new.ingredient_name;
+end;
+/ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,100 @@
+create table ingredients(ingredient_id int,ingredient_name varchar(20),primary key(ingredient_id));
+insert into ingredients values(1,' butter');
+insert into ingredients values(2,' egg');
+insert into ingredients values(3,' garlic');
+insert into ingredients values(4,'milk');
+insert into ingredients values(5,'onion');
+insert into ingredients values(6,'sugar');
+insert into ingredients values(7,'flour');
+insert into ingredients values(8,'garlic powder');
+insert into ingredients values(9,'rice');
+insert into ingredients values(10,'tomato');
+insert into ingredients values(11,'lemon');
+insert into ingredients values(12,'apple');
+insert into ingredients values(13,'orange');
+insert into ingredients values(14,'banana');
+insert into ingredients values(15,'pineapple');
+insert into ingredients values(16,'strawberry');
+insert into ingredients values(17,'almond');
+insert into ingredients values(18,'cheddar');
+insert into ingredients values(19,'mozzarela');
+insert into ingredients values(20,'almond milk');
+insert into ingredients values(21,'coconut milk');
+insert into ingredients values(22,'chicken breast');
+insert into ingredients values(23,'salmon');
+insert into ingredients values(24,'cinnamon');
+insert into ingredients values(25,'cilantro');
+insert into ingredients values(26,'oregano');
+insert into ingredients values(27,'honey');
+insert into ingredients values(28,'chilly powder');
+insert into ingredients values(29,'seasoned salt');
+insert into ingredients values(30,'garam masala');
+insert into ingredients values(31,'oats');
+insert into ingredients values(32,'whey isolate');
+
+insert into ingredients values(33,'walnut');
+insert into ingredients values(34,'potato');
+insert into ingredients values(35,'olive oil');
+insert into ingredients values(36,'pepper');
+
+
+create table dish(dish_id int,dish_name varchar(25),time_to_cook varchar(20),video_link varchar(100),recipe_link varchar(100),prefernce varchar(10),primary key(dish_id));
+insert into dish values(1,'white cake','15 min','https://www.youtube.com/watch?v=oBfPssyAKhY','https://recetasdecocinafaciles.net/en/pastel-blanco/','veg');
+insert into dish values(2,'banana nut oatmeal','10 min','https://www.youtube.com/watch?v=OmCeC_I376g','https://www.food.com/recipe/banana-nut-oatmeal-137753','veg');
+insert into dish values(3,'Galician pie','20 min','https://www.youtube.com/watch?v=7dEHb-ZZtk4', 'https://redmond.company/country/%27','veg');
+insert into dish values(4,'honey grilled chicken','30 min','https://www.youtube.com/watch?v=Tuk0-GEVBCo','https://www.allrecipes.com/recipe/86637/honey-grilled-chicken/','non veg');
+
+
+create table recipe(ingredient_id int,dish_id int,foreign key(dish_id) references dish);
+insert into recipe values(6,1);
+insert into recipe values(7,1);
+insert into recipe values(11,1);
+insert into recipe values(1,1);
+insert into recipe values(29,1);
+
+insert into recipe values(33,2);
+insert into recipe values(1,2);
+insert into recipe values(6,2);
+insert into recipe values(31,2);
+insert into recipe values(4,2);
+insert into recipe values(14,2);
+
+insert into recipe values(35,3);
+insert into recipe values(17,3);
+insert into recipe values(3,3);
+insert into recipe values(5,3);
+insert into recipe values(10,3);
+insert into recipe values(29,3);
+insert into recipe values(36,3);
+insert into recipe values(1,3);
+
+insert into recipe values(1,4);
+insert into recipe values(3,4);
+insert into recipe values(27,4);
+insert into recipe values(11,4);
+insert into recipe values(22,4);
+
+create table nutrional_info(ingredient_id int,protein int, carbs int,fats int,calories int,primary key(ingredient_id));
+insert into nutrional_info values(1,1,1,12,102);
+insert into nutrional_info values(6,0,14,1,40);
+insert into nutrional_info values(7,6,30,1,180);
+insert into nutrional_info values(29,0,0,0,10);
+insert into nutrional_info values(11,0,2,0,20);
+insert into nutrional_info values(1,1,1,12,102);
+
+
+insert into nutrional_info values(3,1,1,2,10);
+insert into nutrional_info values(27,1,17,1,64);
+insert into nutrional_info values(22,31,11,4,165);
+
+------------------------------------------------------------------------------------------
+create table protein(dish_id int,value int, primary key(dish_id));
+create table fats(dish_id int,value int, primary key(dish_id));
+create table carbs(dish_id int,value int, primary key(dish_id));
+create table calories(dish_id int,value int, primary key(dish_id));
+
+
+
+
+
+
